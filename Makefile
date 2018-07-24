@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := help
-.PHONY: help build push start stop show destroy logs logs-master logs-slicer logs-worker k8s-master recreate 
+.PHONY: help build push start stop show destroy logs logs-master logs-slicer logs-worker k8s-master setup 
 SHELL := bash
 
 # defaults to my minikube teraslice master, override by setting the
@@ -18,12 +18,9 @@ help: ## show target summary
 	  done \
 	done
 
-start: ## start minikube
-	minikube start
-
-stop: destroy ## stop minikube
-	minikube stop
-
+install:
+	yarn global add teraslice-job-manager
+	
 show: ## show k8s deployments and services
 	kubectl get deployments,svc,po -o wide
 
@@ -59,15 +56,15 @@ push: ## build the teraslice:k8sdev container, override container name by settin
 	docker push $(TERASLICE_K8S_IMAGE)
 	docker push $(TERASLICE_WORKER_K8S_IMAGE)
 
-recreate: destroy build push configs k8s-master ## recreate minikube setup
-	sleep 15
-	make show
+setup: configs k8s-master ## setup teraslice
+
+rebuild: tjm stop ./example-job.json
+rebuild: destroy setup ## rebuild teraslice
 
 register:
-	tjm asset deploy -c $(TERASLICE_MASTER_URL)
+	tjm asset deploy -c $(TERASLICE_MASTER_URL) || echo '* it is okay'
 	tjm register -c $(TERASLICE_MASTER_URL) ./example-job.json
 
 example: 
-	bump ./asset/asset.json patch
-	tjm asset update
+	yes | tjm asset replace -c $(TERASLICE_MASTER_URL) || echo '* it is okay'
 	tjm start ./example-job.json

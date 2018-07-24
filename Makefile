@@ -63,6 +63,10 @@ recreate: destroy build push configs k8s-master ## recreate minikube setup
 	sleep 15
 	make show
 
+register:
+	tjm asset deploy -c $(TERASLICE_MASTER_URL)
+	tjm register -c $(TERASLICE_MASTER_URL) ./example-job.json
+
 example: 
 	bump ./asset/asset.json patch
 	tjm asset update

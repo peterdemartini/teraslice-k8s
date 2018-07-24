@@ -1,12 +1,11 @@
 .DEFAULT_GOAL := help
-.PHONY: help start stop show destroy logs logs-master logs-slicer logs-worker submit k8s-master
+.PHONY: help build push start stop show destroy logs logs-master logs-slicer logs-worker k8s-master recreate 
 SHELL := bash
 
 # defaults to my minikube teraslice master, override by setting the
-# TERASLICE_MASTER_URL env variable
 TERASLICE_MASTER_URL ?= 192.168.99.100:30678
-TERASLICE_K8S_IMAGE ?= peterdemartini/teraslice:clean-up-timers
-TERASLICE_WORKER_K8S_IMAGE ?= peterdemartini/teraslice-worker:getting-started
+TERASLICE_K8S_IMAGE ?= peterdemartini/teraslice:k8sdev
+TERASLICE_WORKER_K8S_IMAGE ?= peterdemartini/teraslice-worker:k8sdev
 LOG_LENGTH ?= 10
 
 help: ## show target summary
@@ -22,7 +21,7 @@ help: ## show target summary
 start: ## start minikube
 	minikube start
 
-stop: ## stop minikube
+stop: destroy ## stop minikube
 	minikube stop
 
 show: ## show k8s deployments and services
@@ -45,9 +44,6 @@ logs-slicer: ## show logs for k8s teraslice slicers
 logs-worker: ## show logs for k8s teraslice workers
 	kubectl logs -l app=teraslice,nodeType=worker --tail=$(LOG_LENGTH) | bunyan
 
-submit: ## submit test job, override teraslice URL by setting TERASLICE_MASTER_URL
-	curl -sS -XPOST $(TERASLICE_MASTER_URL)/jobs -d@./example-job.json
-
 k8s-master: ## start teraslice master in k8s
 	kubectl create -f ./masterDeployment.yaml
 
@@ -59,5 +55,15 @@ build: ## build the teraslice:k8sdev container, override container name by setti
 	docker build -t $(TERASLICE_K8S_IMAGE) ../teraslice
 	docker build -t $(TERASLICE_WORKER_K8S_IMAGE) ../teraslice-worker
 
-setup: destroy build configs k8s-master ## recreate minikube setup
-	echo '* running full test"
+push: ## build the teraslice:k8sdev container, override container name by setting TERASLICE_K8S_IMAGE
+	docker push $(TERASLICE_K8S_IMAGE)
+	docker push $(TERASLICE_WORKER_K8S_IMAGE)
+
+recreate: destroy build push configs k8s-master ## recreate minikube setup
+	sleep 15
+	make show
+
+start-example: 
+	bump ./asset/asset.json patch
+	tjm asset update
+	tjm start ./example-job.json

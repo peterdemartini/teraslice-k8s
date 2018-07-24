@@ -19,7 +19,8 @@ spec:
     spec:
       containers:
       - name: teraslice-master
-        image: teraslice:k8sdev
+        image: peterdemartini/teraslice:k8sdev
+        imagePullPolicy: Always
         ports:
         - containerPort: 5678
         volumeMounts:
@@ -32,6 +33,8 @@ spec:
             items:
               - key: teraslice-master.yaml
                 path: teraslice.yaml  # the filename that the configMap gets written to, inside the matching mountPath
+      imagePullSecrets:
+        - name: docker-tera1-secret
 ---
 kind: Service
 apiVersion: v1

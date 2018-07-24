@@ -1,0 +1,23 @@
+{
+    "name": "example-data-generator-job",
+    "lifecycle": "persistent",
+    "workers": 2,
+    "operations": [
+        {
+            "_op": "elasticsearch_data_generator",
+            "size": 5000
+        },
+        {
+            "_op": "noop"
+        },
+        {
+            "_op": "elasticsearch_index_selector",
+            "index": "example-teraslice-k8s-test",
+            "type": "events"
+        },
+        {
+            "_op": "elasticsearch_bulk",
+            "size": 1000
+        }
+    ]
+}

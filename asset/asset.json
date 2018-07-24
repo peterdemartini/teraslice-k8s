@@ -1,6 +1,6 @@
 {
     "name": "example",
-    "version": "1.0.1",
+    "version": "1.0.7",
     "tjm": {
         "clusters": [
             "http://192.168.99.100:30678"

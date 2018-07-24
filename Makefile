@@ -63,7 +63,7 @@ recreate: destroy build push configs k8s-master ## recreate minikube setup
 	sleep 15
 	make show
 
-start-example: 
+example: 
 	bump ./asset/asset.json patch
 	tjm asset update
 	tjm start ./example-job.json

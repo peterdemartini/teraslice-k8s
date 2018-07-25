@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := help
-.PHONY: help build push start stop show destroy logs logs-master logs-slicer logs-worker k8s-master setup 
+.PHONY: help build push start stop show destroy logs logs-master logs-slicer logs-worker k8s-master setup rebuild
 SHELL := bash
 
 # defaults to my minikube teraslice master, override by setting the
@@ -58,7 +58,6 @@ push: ## build the teraslice:k8sdev container, override container name by settin
 
 setup: configs k8s-master ## setup teraslice
 
-rebuild: tjm stop ./example-job.json
 rebuild: destroy setup ## rebuild teraslice
 
 register:

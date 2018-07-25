@@ -1,7 +1,7 @@
 {
     "name": "example-data-generator-job",
     "lifecycle": "once",
-    "workers": 3,
+    "workers": 2,
     "assets": [
         "example"
     ],
@@ -26,6 +26,6 @@
     "tjm": {
         "cluster": "http://192.168.99.100:30678",
         "version": "0.0.1",
-        "job_id": "61476f8d-52f7-4c2e-91b5-1368523e0841"
+        "job_id": "494c5247-e828-49c3-bc6a-8a173a9ea794"
     }
 }

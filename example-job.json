@@ -8,24 +8,24 @@
     "operations": [
         {
             "_op": "elasticsearch_data_generator",
-            "size": 1000000
+            "size": 500000
         },
         {
             "_op": "example-op"
         },
         {
             "_op": "elasticsearch_index_selector",
-            "index": "example-teraslice-k8s-test",
+            "index": "terak8s-example-data",
             "type": "events"
         },
         {
             "_op": "elasticsearch_bulk",
-            "size": 1000
+            "size": 5000
         }
     ],
     "tjm": {
         "cluster": "http://192.168.99.100:30678",
         "version": "0.0.1",
-        "job_id": "ef00b15b-7017-4597-939f-36d59496d730"
+        "job_id": "e6616b96-a250-4997-8e27-3431a6940ca8"
     }
 }

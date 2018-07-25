@@ -58,7 +58,14 @@ push: ## build the teraslice:k8sdev container, override container name by settin
 
 setup: configs k8s-master ## setup teraslice
 
-rebuild: destroy setup ## rebuild teraslice
+rebuild:
+	make destroy
+	make configs
+	curl -fsS -XDELETE 'http://localhost:9200/terak8s*' > /dev/null
+	make k8s-master
+	sleep 10
+	tjm reset ./example-job.json
+	make register
 
 register:
 	tjm asset deploy -c $(TERASLICE_MASTER_URL) || echo '* it is okay'

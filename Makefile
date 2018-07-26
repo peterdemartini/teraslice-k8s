@@ -6,7 +6,7 @@ SHELL := bash
 TERASLICE_MASTER_URL ?= 192.168.99.100:30678
 TERASLICE_K8S_IMAGE ?= peterdemartini/teraslice:k8sdev
 TERASLICE_WORKER_K8S_IMAGE ?= peterdemartini/teraslice-worker:k8sdev
-LOG_LENGTH ?= 10
+LOG_LENGTH ?= 1000
 
 help: ## show target summary
 	@grep -E '^\S+:.* ## .+$$' $(MAKEFILE_LIST) | sed 's/##/#/' | while IFS='#' read spec help; do \
@@ -68,9 +68,9 @@ rebuild:
 	make register
 
 register:
-	tjm asset deploy -c $(TERASLICE_MASTER_URL) || echo '* it is okay'
+	tjm asset --deploy -c $(TERASLICE_MASTER_URL) || echo '* it is okay'
 	tjm register -c $(TERASLICE_MASTER_URL) ./example-job.json
 
 example: 
-	yes | tjm asset replace -c $(TERASLICE_MASTER_URL) || echo '* it is okay'
+	yes | tjm asset --replace -c $(TERASLICE_MASTER_URL) || echo '* it is okay'
 	tjm start ./example-job.json

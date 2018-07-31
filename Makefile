@@ -1,11 +1,10 @@
 .DEFAULT_GOAL := help
-.PHONY: help build push start stop show destroy logs logs-master logs-slicer logs-worker k8s-master setup rebuild
+.PHONY: help build-and-push start stop show destroy logs logs-master logs-slicer logs-worker k8s-master setup rebuild
 SHELL := bash
 
 # defaults to my minikube teraslice master, override by setting the
 TERASLICE_MASTER_URL ?= 192.168.99.100:30678
 TERASLICE_K8S_IMAGE ?= peterdemartini/teraslice:k8sdev
-TERASLICE_WORKER_K8S_IMAGE ?= peterdemartini/teraslice-worker:k8sdev
 LOG_LENGTH ?= 1000
 
 help: ## show target summary
@@ -48,13 +47,13 @@ configs: ## create the configmaps
 	kubectl create configmap teraslice-master --from-file=teraslice-master.yaml
 	kubectl create configmap teraslice-worker --from-file=teraslice-worker.yaml
 
-build: ## build the teraslice:k8sdev container, override container name by setting TERASLICE_K8S_IMAGE
-	docker build -t $(TERASLICE_K8S_IMAGE) ../teraslice
-	docker build -t $(TERASLICE_WORKER_K8S_IMAGE) ../teraslice-worker
-
-push: ## build the teraslice:k8sdev container, override container name by setting TERASLICE_K8S_IMAGE
+build-and-push:
+	docker build -t peterdemartini/teraslice ../teraslice
+	docker build -t peterdemartini/teraslice-worker ../teraslice-worker
+	docker push peterdemartini/teraslice 
+	docker push peterdemartini/teraslice-worker
+	docker build -t $(TERASLICE_K8S_IMAGE) .
 	docker push $(TERASLICE_K8S_IMAGE)
-	docker push $(TERASLICE_WORKER_K8S_IMAGE)
 
 setup: configs k8s-master ## setup teraslice
 

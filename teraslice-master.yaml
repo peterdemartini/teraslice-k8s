@@ -16,5 +16,5 @@ teraslice:
     cluster_manager_type: "kubernetes"
     master: true
     master_hostname: "127.0.0.1"
-    kubernetes_image: "peterdemartini/teraslice-worker:k8sdev"
+    kubernetes_image: "peterdemartini/teraslice:k8sdev"
     name: "terak8s"

@@ -1,6 +1,7 @@
 {
     "name": "example-data-generator-job",
     "lifecycle": "once",
+    "analytics": true,
     "workers": 2,
     "assets": [
         "example"
@@ -8,7 +9,7 @@
     "operations": [
         {
             "_op": "elasticsearch_data_generator",
-            "size": 500000
+            "size": 200000
         },
         {
             "_op": "example-op"
@@ -20,12 +21,12 @@
         },
         {
             "_op": "elasticsearch_bulk",
-            "size": 5000
+            "size": 10000
         }
     ],
     "tjm": {
         "cluster": "http://192.168.99.100:30678",
         "version": "0.0.1",
-        "job_id": "ae03f717-e760-45f4-9d85-8a73d5d6a23e"
+        "job_id": "bf7efcf5-29de-4abc-a000-ad3946be15c0"
     }
 }

@@ -4,7 +4,7 @@ SHELL := bash
 
 # defaults to my minikube teraslice master, override by setting the
 TERASLICE_MASTER_URL ?= 192.168.99.100:30678
-TERASLICE_K8S_IMAGE ?= peterdemartini/teraslice:k8sdev
+TERASLICE_K8S_IMAGE ?= peterdemartini/teraslice
 LOG_LENGTH ?= 1000
 
 help: ## show target summary
@@ -49,11 +49,7 @@ configs: ## create the configmaps
 
 build-and-push:
 	docker build -t peterdemartini/teraslice ../teraslice
-	docker build -t peterdemartini/teraslice-worker ../teraslice-worker
 	docker push peterdemartini/teraslice 
-	docker push peterdemartini/teraslice-worker
-	docker build -t $(TERASLICE_K8S_IMAGE) .
-	docker push $(TERASLICE_K8S_IMAGE)
 
 setup: configs k8s-master ## setup teraslice
 
